@@ -17,10 +17,11 @@
 # - Each submodule is committed independently with `git add -A`, picking
 #   up modifications, deletions, and untracked files.
 # - Submodules with no changes are skipped silently.
-# - After committing, each submodule with an upstream branch and unpushed
-#   commits is pushed — but only if its origin is owned by ReplicaHealth.
-# - If a submodule is in a detached-HEAD state, its commit will succeed
-#   but the push will be skipped (no upstream branch).
+# - After committing, each submodule on a named branch is pushed (with
+#   automatic upstream setup via `git push -u` on first push) — but only
+#   if its origin is owned by ReplicaHealth.
+# - Submodules in a detached-HEAD state are still skipped on push (no
+#   branch to push to).
 
 set -euo pipefail
 
@@ -61,35 +62,45 @@ else
 fi
 
 # ─── 3. Push each submodule whose origin is owned by ReplicaHealth ────────
+# If the current branch has no upstream yet, push with `-u` to create one
+# (e.g. first push of a freshly-created feature branch).
 git submodule foreach --quiet '
     url=$(git config --get remote.origin.url 2>/dev/null || echo "")
-    if echo "$url" | grep -iqE "$ALLOWED_OWNER_PATTERN"; then
-        if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
+    if ! echo "$url" | grep -iqE "$ALLOWED_OWNER_PATTERN"; then
+        echo "⚠ $displaypath: skipping push (origin not owned by ReplicaHealth: $url)"
+    else
+        branch=$(git branch --show-current)
+        if [ -z "$branch" ]; then
+            echo "⚠ $displaypath: detached HEAD — skipping push"
+        elif git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
             if [ -n "$(git log "@{u}.." --oneline 2>/dev/null)" ]; then
-                echo "→ $displaypath: pushing to $url"
+                echo "→ $displaypath: pushing $branch to $url"
                 git push
             fi
         else
-            echo "⚠ $displaypath: no upstream branch — skipping push"
+            echo "→ $displaypath: first push of $branch to $url (setting upstream)"
+            git push -u origin "$branch"
         fi
-    else
-        echo "⚠ $displaypath: skipping push (origin not owned by ReplicaHealth: $url)"
     fi
 '
 
 # ─── 4. Push the workspace if its origin is owned by ReplicaHealth ────────
 workspace_url=$(git config --get remote.origin.url 2>/dev/null || echo "")
-if echo "$workspace_url" | grep -iqE "$ALLOWED_OWNER_PATTERN"; then
-    if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
+if ! echo "$workspace_url" | grep -iqE "$ALLOWED_OWNER_PATTERN"; then
+    echo "⚠ workspace: skipping push (origin not owned by ReplicaHealth: $workspace_url)"
+else
+    workspace_branch=$(git branch --show-current)
+    if [ -z "$workspace_branch" ]; then
+        echo "⚠ workspace: detached HEAD — skipping push"
+    elif git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
         if [ -n "$(git log "@{u}.." --oneline 2>/dev/null)" ]; then
-            echo "→ workspace: pushing to $workspace_url"
+            echo "→ workspace: pushing $workspace_branch to $workspace_url"
             git push
         else
             echo "→ workspace: nothing to push"
         fi
     else
-        echo "⚠ workspace: no upstream branch — skipping push"
+        echo "→ workspace: first push of $workspace_branch to $workspace_url (setting upstream)"
+        git push -u origin "$workspace_branch"
     fi
-else
-    echo "⚠ workspace: skipping push (origin not owned by ReplicaHealth: $workspace_url)"
 fi
