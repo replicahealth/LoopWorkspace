@@ -1,0 +1,43 @@
+:default	16:21:04.535710-0400	Loop	-[WCSession handleSessionStateChanged:]_block_invoke <WCSessionState: 0x12bcd9dd0, reachable: NO, paired: YES, appInstalled: YES, complicationEnabled: YES(20), pairingID: F0977576-91B3-4F2F-B9AB-20FD930DCB64, pairedDevicesPairingIDs: {("F0977576-91B3-4F2F-B9AB-20FD930DCB64","D0148F1C-F9B1-4A81-92C5-B1CE868819B7","E193C533-6991-470D-A85C-547B8E9B1F4A")}, appInstallationID: 30259B81F7CABB9E62FEF8D32DDC553E>
+default	16:21:04.535732-0400	Loop	-[WCSession handleSessionStateChanged:]_block_invoke <WCSessionState: 0x12bcd9dd0, reachable: NO, paired: YES, appInstalled: YES, complicationEnabled: YES(20), pairingID: F0977576-91B3-4F2F-B9AB-20FD930DCB64, pairedDevicesPairingIDs: {("F0977576-91B3-4F2F-B9AB-20FD930DCB64","D0148F1C-F9B1-4A81-92C5-B1CE868819B7","E193C533-6991-470D-A85C-547B8E9B1F4A")}, appInstallationID: 30259B81F7CABB9E62FEF8D32DDC553E>
+default	16:21:04.535741-0400	Loop	-[WCSession handleSessionStateChanged:]_block_invoke <WCSessionState: 0x12bcd9dd0, reachable: NO, paired: YES, appInstalled: YES, complicationEnabled: YES(20), pairingID: F0977576-91B3-4F2F-B9AB-20FD930DCB64, pairedDevicesPairingIDs: {("F0977576-91B3-4F2F-B9AB-20FD930DCB64","D0148F1C-F9B1-4A81-92C5-B1CE868819B7","E193C533-6991-470D-A85C-547B8E9B1F4A")}, appInstallationID: 30259B81F7CABB9E62FEF8D32DDC553E>
+debug	16:21:13.713574-0400	Loop	Updating battery data based on properties: {
+    CurrentCapacity = 40;
+    ExternalConnected = 1;
+    MaxCapacity = 100;
+}
+debug	16:21:13.713588-0400	Loop	Updating battery data based on properties: {
+    CurrentCapacity = 40;
+    ExternalConnected = 1;
+    MaxCapacity = 100;
+}
+debug	16:21:13.713597-0400	Loop	Updating battery data based on properties: {
+    CurrentCapacity = 40;
+    ExternalConnected = 1;
+    MaxCapacity = 100;
+}
+default	16:21:16.224971-0400	Loop	centralManager(_:didDisconnectPeripheral:error:): <CBPeripheral: 0x109262e60, identifier = 13F3C15C-D742-9A7E-B60A-ADBB9C58FB07, name = DexcomU3, mtu = 23, state = disconnected>
+error	16:21:16.225011-0400	Loop	Configured peripheral has no services. Reconfiguring…
+error	16:21:16.225059-0400	Loop	Error applying peripheral configuration: notReady
+default	16:21:16.225085-0400	Loop	Delegate configuration completed
+error	16:21:16.225114-0400	Loop	Configured peripheral has no services. Reconfiguring…
+error	16:21:16.225150-0400	Loop	Error applying peripheral configuration: notReady
+default	16:21:16.225186-0400	Loop	Delegate configuration completed
+default	16:21:16.224992-0400	Loop	centralManager(_:didDisconnectPeripheral:error:): <CBPeripheral: 0x109262e60, identifier = 13F3C15C-D742-9A7E-B60A-ADBB9C58FB07, name = DexcomU3, mtu = 23, state = disconnected>
+error	16:21:16.225018-0400	Loop	Configured peripheral has no services. Reconfiguring…
+error	16:21:16.225068-0400	Loop	Error applying peripheral configuration: notReady
+default	16:21:16.225091-0400	Loop	Delegate configuration completed
+error	16:21:16.225121-0400	Loop	Configured peripheral has no services. Reconfiguring…
+error	16:21:16.225157-0400	Loop	Error applying peripheral configuration: notReady
+default	16:21:16.225193-0400	Loop	Delegate configuration completed
+default	16:21:16.225001-0400	Loop	centralManager(_:didDisconnectPeripheral:error:): <CBPeripheral: 0x109262e60, identifier = 13F3C15C-D742-9A7E-B60A-ADBB9C58FB07, name = DexcomU3, mtu = 23, state = disconnected>
+error	16:21:16.225023-0400	Loop	Configured peripheral has no services. Reconfiguring…
+error	16:21:16.225074-0400	Loop	Error applying peripheral configuration: notReady
+default	16:21:16.225097-0400	Loop	Delegate configuration completed
+error	16:21:16.225126-0400	Loop	Configured peripheral has no services. Reconfiguring…
+error	16:21:16.225164-0400	Loop	Error applying peripheral configuration: notReady
+default	16:21:16.225198-0400	Loop	Delegate configuration completed
+default	16:21:17.600189-0400	Loop	-[WCSession onqueue_sendResponseData:identifier:dictionaryMessage:]_block_invoke succeeded for response <WCMessageResponse: 0x12bcda850, identifier: C06B58DB-99E9-40E0-BB2D-F65631C179AF, dataLength: 601, error: kNoErr>
+default	16:21:17.600203-0400	Loop	-[WCSession onqueue_sendResponseData:identifier:dictionaryMessage:]_block_invoke succeeded for response <WCMessageResponse: 0x12bcda850, identifier: C06B58DB-99E9-40E0-BB2D-F65631C179AF, dataLength: 601, error: kNoErr>
+default	16:21:17.600174-0400	Loop	-[WCSession onqueue_sendResponseData:identifier:dictionaryMessage:]_block_invoke succeeded for response <WCMessageResponse: 0x12bcda850, identifier: C06B58DB-99E9-40E0-BB2D-F65631C179AF, dataLength: 601, error: kNoErr>
+
