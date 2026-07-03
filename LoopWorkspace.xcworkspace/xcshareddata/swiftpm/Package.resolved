@@ -1,4 +1,5 @@
 {
+  "originHash" : "bcf1c6382a98310c0cbcccd5a35e8ae97f9dd70df6217856958252fdbb2b41c7",
   "pins" : [
     {
       "identity" : "amplitude-ios",
@@ -54,6 +55,15 @@
       }
     },
     {
+      "identity" : "slidebutton",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/no-comment/SlideButton",
+      "state" : {
+        "branch" : "main",
+        "revision" : "5eacebba4d7deeb693592bc9a62ab2d2181e133b"
+      }
+    },
+    {
       "identity" : "swiftcharts",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ivanschuetz/SwiftCharts",
@@ -63,5 +73,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
