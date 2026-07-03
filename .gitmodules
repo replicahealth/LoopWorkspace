@@ -55,4 +55,4 @@
 [submodule "OmnipodKit"]
 	path = OmnipodKit
 	url = https://github.com/replicahealth/OmnipodKit.git
-	branch = replica-loopkit-compat
+	branch = replica-o5-dev
