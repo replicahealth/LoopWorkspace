@@ -27,3 +27,8 @@ xcuserdata/
 *.playground
 playground.xcworkspace
 timeline.xctimeline
+
+## Shared scheme — holds OPENAI_API_KEY env var locally; never commit.
+## If you need to regenerate it on a fresh clone, copy from a known-good
+## checkout or let Xcode auto-create a default scheme.
+LoopWorkspace.xcworkspace/xcshareddata/xcschemes/LoopWorkspace.xcscheme
