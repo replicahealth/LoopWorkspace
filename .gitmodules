@@ -18,7 +18,8 @@
 	url = https://github.com/LoopKit/MKRingProgressView.git
 [submodule "NightscoutService"]
 	path = NightscoutService
-	url = https://github.com/ps2/NightscoutService.git
+	url = https://github.com/replicahealth/NightscoutService.git
+	branch = feature/policy-trials
 [submodule "Minizip"]
 	path = Minizip
 	url = https://github.com/LoopKit/Minizip.git
