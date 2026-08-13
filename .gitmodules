@@ -58,3 +58,6 @@
 [submodule "MinimedKit"]
 	path = MinimedKit
 	url = https://github.com/LoopKit/MinimedKit.git
+[submodule "OmnipodKit"]
+	path = OmnipodKit
+	url = https://github.com/replicahealth/OmnipodKit.git
