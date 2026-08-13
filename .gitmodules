@@ -64,4 +64,4 @@
 [submodule "LibreLoop"]
 	path = LibreLoop
 	url = https://github.com/replicahealth/LibreLoopReplicaIntegration.git
-	branch = policy-trials-backport
+	branch = main
