@@ -57,3 +57,11 @@
 	path = OmnipodKit
 	url = https://github.com/replicahealth/OmnipodKit.git
 	branch = replica-o5-dev
+[submodule "LibreCRKit"]
+	path = LibreCRKit
+	url = https://github.com/airedev326/LibreCRKit.git
+	branch = main
+[submodule "LibreLoop"]
+	path = LibreLoop
+	url = https://github.com/replicahealth/LibreLoopReplicaIntegration.git
+	branch = policy-trials-backport

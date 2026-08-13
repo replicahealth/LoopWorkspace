@@ -32,3 +32,6 @@ timeline.xctimeline
 ## If you need to regenerate it on a fresh clone, copy from a known-good
 ## checkout or let Xcode auto-create a default scheme.
 LoopWorkspace.xcworkspace/xcshareddata/xcschemes/LoopWorkspace.xcscheme
+
+## Local scheme backup (holds OPENAI_API_KEY); never commit.
+LoopWorkspace.xcscheme.policy-trials.backup
