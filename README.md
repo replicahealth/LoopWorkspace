@@ -38,7 +38,15 @@ xed .
 
 You should be able to build to a simulator without changing anything. But if you wish to build to a real device, you'll need a developer account, and you'll need to tell Xcode about your team id, which you can find at https://developer.apple.com/.
 
-Select the LoopConfigOverride file in Xcode's project navigator, uncomment the `LOOP_DEVELOPMENT_TEAM`, and replace the existing team id with your own id.
+In this fork, all targets derive their signing team from the `LOOP_DEVELOPMENT_TEAM` build setting — no team ids are hardcoded in the project files. The recommended way to set it is a machine-level override file in your home directory, which git can never clobber or accidentally commit:
+
+```
+echo 'LOOP_DEVELOPMENT_TEAM = YOURTEAMID' > ~/LoopConfigOverride.xcconfig
+```
+
+This works because the tracked `LoopConfigOverride.xcconfig` at the workspace root starts with `#include? "../../LoopConfigOverride.xcconfig"`, which resolves to `~/LoopConfigOverride.xcconfig` when the workspace is cloned two levels below your home directory (e.g. `~/projects/LoopWorkspace`). If your clone lives elsewhere, adjust that include path or set `LOOP_DEVELOPMENT_TEAM` directly in the workspace-root file (upstream's method) — just don't commit your team id.
+
+**Note:** the app's bundle identifier is derived from the team (`com.<TEAM>.loopkit.Loop`), so changing the team id changes the app identity. iOS will treat a build with a different team as a brand-new app — existing settings and pump/CGM pairings from a previous install will not carry over.
 
 ### Build
 
