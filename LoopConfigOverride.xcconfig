@@ -1,3 +1,17 @@
+// Optional machine-level override, kept outside the checkout so git can never
+// clobber it and your team id can never be committed.
+//
+// Xcode resolves these paths relative to the PRIMARY xcconfig (Loop/Loop.xcconfig),
+// not relative to this file, so each hop is measured from the Loop/ directory:
+//   ../..     -> the workspace's parent   (reaches ~ for ~/LoopWorkspace)
+//   ../../..  -> one level above that     (reaches ~ for ~/projects/LoopWorkspace)
+// Listing several depths makes ~/LoopConfigOverride.xcconfig work no matter how
+// deep the workspace is cloned. Do NOT add a bare "../" hop: from Loop/ that
+// resolves to this very file and self-includes.
+//
+// Later includes win, so the file nearest the workspace takes precedence.
+#include? "../../../../LoopConfigOverride.xcconfig"
+#include? "../../../LoopConfigOverride.xcconfig"
 #include? "../../LoopConfigOverride.xcconfig"
 
 // Override this if you don't want the default com.${DEVELOPMENT_TEAM}.loopkit that loop uses

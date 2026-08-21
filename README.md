@@ -44,7 +44,9 @@ In this fork, all targets derive their signing team from the `LOOP_DEVELOPMENT_T
 echo 'LOOP_DEVELOPMENT_TEAM = YOURTEAMID' > ~/LoopConfigOverride.xcconfig
 ```
 
-This works because the tracked `LoopConfigOverride.xcconfig` at the workspace root starts with `#include? "../../LoopConfigOverride.xcconfig"`, which resolves to `~/LoopConfigOverride.xcconfig` when the workspace is cloned two levels below your home directory (e.g. `~/projects/LoopWorkspace`). If your clone lives elsewhere, adjust that include path or set `LOOP_DEVELOPMENT_TEAM` directly in the workspace-root file (upstream's method) — just don't commit your team id.
+This works because the tracked `LoopConfigOverride.xcconfig` at the workspace root chains a few optional `#include?` lines that walk up toward your home directory. Xcode resolves those paths relative to the *primary* xcconfig — `Loop/Loop.xcconfig` — not relative to the file doing the including, so each hop is counted from the `Loop/` directory: `../..` reaches the workspace's parent, `../../..` one level above that, and so on. The chain covers clones one to three levels below home, so `~/LoopWorkspace` and `~/projects/LoopWorkspace` both work.
+
+If your clone lives deeper still, add another `../` hop to that chain — but never a bare `../`, which resolves to the workspace-root file itself and self-includes. Alternatively set `LOOP_DEVELOPMENT_TEAM` directly in the workspace-root file (upstream's method) — just don't commit your team id.
 
 **Note:** the app's bundle identifier is derived from the team (`com.<TEAM>.loopkit.Loop`), so changing the team id changes the app identity. iOS will treat a build with a different team as a brand-new app — existing settings and pump/CGM pairings from a previous install will not carry over.
 
