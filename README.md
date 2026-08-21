@@ -50,4 +50,6 @@ This works because the tracked `LoopConfigOverride.xcconfig` at the workspace ro
 
 ### Build
 
-Select the "LoopWorkspace" scheme (not the "Loop" scheme) and Build, Run, or Test.
+Select the "LoopWorkspace" scheme (not the "Loop" scheme) and Build, Run, or Test. The LoopWorkspace scheme is what builds all of the CGM, pump, and service plugins — building the "Loop" scheme alone produces an app containing only the simulator drivers.
+
+The committed scheme includes an `OPENAI_API_KEY` environment variable that is empty and disabled. If you enable it locally with a real key for debugging (Edit Scheme → Run → Environment Variables), take care not to commit that change.
