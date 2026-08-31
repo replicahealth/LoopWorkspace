@@ -59,33 +59,42 @@ The committed scheme includes an `OPENAI_API_KEY` environment variable that is e
 The experimental TwinScaleNet dosing strategy carries a version, so any dose
 in a patient's history can be traced to the code that produced it.
 
-The identity is `<baseModel> v<version>`, defined once in
+The identity is `TwinScaleNet<version>`, defined once in
 `Loop/LoopCore/UnifiedDosingStrategy.swift` (`enum TwinScaleNetVersion`). It
 appears in three places, all from that one definition:
 
-- **Dose attribution** — `policyIdentifier` on every enacted dose, stored with
-  the dose record and surfaced in the insulin delivery history. Example:
-  `TwinScaleNet trainsplit_s2 v1 (experimental)`.
-- **The app** — the strategy name on the Dosing Strategy settings screen.
-- **Dose metadata / logs** — `model_base`, `model_version`, and `model_id`,
-  plus the version in the human-readable rationale string.
+- **Dose attribution / logs** — `TwinScaleNet1.0.0`. This is the
+  `policyIdentifier` stored on every enacted dose and surfaced in the insulin
+  delivery history.
+- **The app menu** — `TwinScaleNet1.0.0 (experimental)`, on the Dosing
+  Strategy settings screen.
+- **Dose metadata** — `model_id` (`TwinScaleNet1.0.0`), `model_version`
+  (`1.0.0`) and `model_base` (the checkpoint), plus the versioned name in the
+  human-readable rationale string.
 
-`baseModel` names the trained checkpoint. `version` covers the checkpoint
-*and* everything downstream that changes what is delivered: features, TDD
-anchor, gain wrapper, shield, safety backstops, dose rounding. **Two builds
-sharing a base model but differing in version do not dose identically.**
-`version` resets to 1 whenever `baseModel` changes.
+`version` covers the trained checkpoint *and* everything downstream that
+changes what is delivered: features, TDD anchor, gain wrapper, shield, safety
+backstops, dose rounding. **Two builds differing in version do not dose
+identically.**
+
+The checkpoint name is deliberately not part of the displayed identity, which
+is kept short. It is recorded in the `model_base` metadata key and in the
+Base model column below, so a version can always be traced to the checkpoint
+it was built on.
+
+Bumping: **major** for a new base checkpoint, **minor** for a change in dosing
+logic on the same checkpoint, **patch** for a constant or tuning change.
 
 Stored doses keep the identifier they were enacted under, so history spanning
 a bump stays correctly attributed on both sides of it.
 
 | Version | Base model | Date | Changes |
 |---|---|---|---|
-| `trainsplit_s2 v1` | `trainsplit_s2` | 2026-08-31 | First versioned build. Adopts the `trainsplit_s2_best` trunk checkpoint (gate PASS 2026-08-13), replacing stage08d `sh_s0h10`. TDD anchor rewritten to the training-time `w7` rule — 7-day trailing shrinkage toward the schedule prior, replacing `max(rolling-24h, basalTotal/0.55)`. Gain range widened to 0.50–2.00 for both the slider and the GAIN_FAST integrator. Gain slider gains a recommendation track and marker; the Adaptive Scaling Factor toggle now gates automatic updating only, and no longer forces the enacted gain to 1. |
+| `TwinScaleNet1.0.0` | `trainsplit_s2` | 2026-08-31 | First versioned build. Adopts the `trainsplit_s2_best` trunk checkpoint (gate PASS 2026-08-13), replacing stage08d `sh_s0h10`. TDD anchor rewritten to the training-time `w7` rule — 7-day trailing shrinkage toward the schedule prior, replacing `max(rolling-24h, basalTotal/0.55)`. Gain range widened to 0.50–2.00 for both the slider and the GAIN_FAST integrator. Gain slider gains a recommendation track and marker; the Adaptive Scaling Factor toggle now gates automatic updating only, and no longer forces the enacted gain to 1. |
 
 ### Pre-versioning history
 
-Builds before `v1` carry the unversioned attribution string
+Builds before `1.0.0` carry the unversioned attribution string
 `TwinScaleNet (experimental)` and cannot be told apart from the dose record
 alone. Doses attributed that way came from a build somewhere in the stage08d
 `sh_s0h10` era; narrowing further requires the app version or build date.

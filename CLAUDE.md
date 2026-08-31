@@ -13,15 +13,22 @@ record key, not a label.
 **Source of truth:** `Loop/LoopCore/UnifiedDosingStrategy.swift`, in
 `enum TwinScaleNetVersion`:
 
-- `baseModel` — the trained checkpoint, e.g. `trainsplit_s2`
-- `version` — an integer covering the checkpoint *and* every piece of dosing
-  logic downstream of it
+- `version` — semantic version, e.g. `1.0.0`, covering the trained checkpoint
+  *and* every piece of dosing logic downstream of it
+- `baseModel` — which checkpoint that version was built on, e.g.
+  `trainsplit_s2`. Recorded, not displayed.
 
-Both flow into one string, `qualifiedName`, which is simultaneously the
-attribution stored on every enacted dose (`AutomaticDoseRecommendation
-.policyIdentifier`), the strategy name shown on the settings screen, and the
-`model_base` / `model_version` / `model_id` keys in dose metadata. There is
-one definition; do not add a second.
+Two names derive from it, and there is one definition of each:
+
+- `logName` → `TwinScaleNet1.0.0`. The attribution stored on every enacted
+  dose (`AutomaticDoseRecommendation.policyIdentifier`), the `model_id` dose
+  metadata key, and the identity in the rationale string.
+- `menuName` → `TwinScaleNet1.0.0 (experimental)`. The strategy name on the
+  settings screen.
+
+`baseModel` does not appear in either name — it reaches the record through the
+`model_base` metadata key and the README table. Do not add a second definition
+of any of this.
 
 ### When to bump
 
@@ -42,7 +49,13 @@ If you are unsure whether a change is dose-affecting, bump — a spurious
 version costs a README row, a missing one silently merges two behaviours
 under one identifier and makes the affected doses unattributable.
 
-Reset `version` to 1 when `baseModel` changes; the pair identifies a build.
+Which component to bump:
+
+- **major** (`2.0.0`) — a new base checkpoint. Also update `baseModel`.
+- **minor** (`1.1.0`) — a change in dosing logic on the same checkpoint: the
+  TDD anchor, the gain wrapper, the feature builder, a safety backstop.
+- **patch** (`1.0.1`) — a constant or tuning change that shifts doses without
+  changing the structure of the logic.
 
 ### Every bump needs a README row
 
