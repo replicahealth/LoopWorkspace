@@ -59,7 +59,7 @@
 	branch = replica-o5-dev
 [submodule "LibreCRKit"]
 	path = LibreCRKit
-	url = https://github.com/airedev326/LibreCRKit.git
+	url = https://github.com/replicahealth/LibreCRKitReplicaIntegration.git
 	branch = main
 [submodule "LibreLoop"]
 	path = LibreLoop
