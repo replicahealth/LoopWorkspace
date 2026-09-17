@@ -90,7 +90,7 @@ a bump stays correctly attributed on both sides of it.
 
 | Version | Base model | Date | Changes |
 |---|---|---|---|
-| `TwinScaleNet1.0.0` | `trainsplit_s2` | 2026-08-31 | First versioned build. Adopts the `trainsplit_s2_best` trunk checkpoint (gate PASS 2026-08-13), replacing stage08d `sh_s0h10`. TDD anchor rewritten to the training-time `w7` rule — 7-day trailing shrinkage toward the schedule prior, replacing `max(rolling-24h, basalTotal/0.55)`. Gain range widened to 0.50–2.00 for both the slider and the GAIN_FAST integrator. Gain slider gains a recommendation track and marker; the Adaptive Scaling Factor toggle now gates automatic updating only, and no longer forces the enacted gain to 1. |
+| `TwinScaleNet1.0.0` | `trainsplit_s2` | 2026-08-31 | First versioned build. Adopts the `trainsplit_s2_best` trunk checkpoint (gate PASS 2026-08-13), replacing stage08d `sh_s0h10`. TDD anchor rewritten to the training-time `w7` rule — 7-day trailing shrinkage toward the schedule prior, replacing `max(rolling-24h, basalTotal/0.55)`. Gain range widened to 0.50–2.00 for both the slider and the GAIN_FAST integrator. On the excursion this allows: a step moves `k` by at most +0.0060 (the +1.5 error cap binds at BG 275), so an unbroken run of maximal highs needs ~92 steps — about 7.6 h at the 5-minute cadence — to travel 1.45 → 2.00. The 3× hypoglycemia weight is a slope, not a per-step ceiling: its own cap would need BG ≤ −55 and never binds, giving −0.0030 at BG 70 and −0.0066 at BG 40. The reachable extremes are therefore close to symmetric (−0.0066 against +0.0060), not 3× apart. Gain slider gains a recommendation track and marker; the Adaptive Scaling Factor toggle now gates automatic updating only, and no longer forces the enacted gain to 1. |
 
 ### Pre-versioning history
 
@@ -98,6 +98,26 @@ Builds before `1.0.0` carry the unversioned attribution string
 `TwinScaleNet (experimental)` and cannot be told apart from the dose record
 alone. Doses attributed that way came from a build somewhere in the stage08d
 `sh_s0h10` era; narrowing further requires the app version or build date.
+
+### Deployment checkpoints
+
+Each version actually installed on a device gets an annotated tag in **both**
+repos, so the exact tree can be rebuilt later. The workspace tag pins every
+submodule, which is what makes the reproduction exact:
+
+```
+git checkout twinscalenet-1.0.0
+git submodule update --init --recursive
+```
+
+`twinscalenet-1.0.0` is the current such checkpoint — the build running on the
+deployment phone. A `revert/twinscalenet-1.0.0` branch points at the same
+commit for convenience; the tag is the authority, because a branch can move
+and a tag cannot.
+
+A checkpoint reproduces **what shipped**, not what was later learned about it.
+The 1.0.0 tag still carries an incorrect `-0.018` figure in the GAIN_FAST
+comment; that is deliberate. The correction lives on the working branch.
 
 ### Adding a version
 
