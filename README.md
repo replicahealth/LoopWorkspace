@@ -106,14 +106,18 @@ repos, so the exact tree can be rebuilt later. The workspace tag pins every
 submodule, which is what makes the reproduction exact:
 
 ```
-git checkout twinscalenet-1.0.0
+git checkout twinscalenet-1.0.0-gain-chart
 git submodule update --init --recursive
 ```
 
-`twinscalenet-1.0.0` is the current such checkpoint — the build running on the
-deployment phone. A `revert/twinscalenet-1.0.0` branch points at the same
-commit for convenience; the tag is the authority, because a branch can move
-and a tag cannot.
+| Checkpoint | Installed | Loop commit | Dosing version | Notes |
+|---|---|---|---|---|
+| `twinscalenet-1.0.0-gain-chart` | 2026-09-28 | `e36cca84` | `TwinScaleNet1.0.0` | Current. Adds the gain-history record and the "Gain k" status chart (Loop PR #10). Doses identical to `twinscalenet-1.0.0`. Release configuration, `LoopWorkspace` scheme. |
+| `twinscalenet-1.0.0` | 2026-09-16 | `b6ed107d` | `TwinScaleNet1.0.0` | First versioned build. Staged as the rollback for the checkpoint above; a `revert/twinscalenet-1.0.0` branch points at the same commit for convenience. |
+
+The tag is the authority, because a branch can move and a tag cannot. A
+checkpoint whose dosing version matches an earlier one differs only in
+non-dosing code, so doses recorded under either are directly comparable.
 
 A checkpoint reproduces **what shipped**, not what was later learned about it.
 The 1.0.0 tag still carries an incorrect `-0.018` figure in the GAIN_FAST
