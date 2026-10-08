@@ -112,7 +112,8 @@ git submodule update --init --recursive
 
 | Checkpoint | Installed | Loop commit | Dosing version | Notes |
 |---|---|---|---|---|
-| `twinscalenet-1.0.0-tandem-soak` | 2026-10-07 | `e36cca84` | `TwinScaleNet1.0.0` | Current. Same Loop code as the gain-chart checkpoint; adds the TandemLoopKit plugin (t:slim X2, micro-bolus basal) for the saline soak. Doses identical for Omnipod; Tandem doses attributed by `HKDevice.model`. Release configuration, `LoopWorkspace` scheme, iPhone 13 Pro. |
+| `twinscalenet-1.0.0-tandem-soak-2` | 2026-10-08 | `e36cca84` | `TwinScaleNet1.0.0` | Current. Same as below plus the Tandem reconnect fix: the driver re-arms Bluetooth reconnection after TandemKit's ladder gives up. No dosing change. |
+| `twinscalenet-1.0.0-tandem-soak` | 2026-10-07 | `e36cca84` | `TwinScaleNet1.0.0` | Same Loop code as the gain-chart checkpoint; adds the TandemLoopKit plugin (t:slim X2, micro-bolus basal) for the saline soak. Doses identical for Omnipod; Tandem doses attributed by `HKDevice.model`. Release configuration, `LoopWorkspace` scheme, iPhone 13 Pro. |
 | `twinscalenet-1.0.0-gain-chart` | 2026-09-28 | `e36cca84` | `TwinScaleNet1.0.0` | Adds the gain-history record and the "Gain k" status chart (Loop PR #10). Doses identical to `twinscalenet-1.0.0`. Release configuration, `LoopWorkspace` scheme. |
 | `twinscalenet-1.0.0` | 2026-09-16 | `b6ed107d` | `TwinScaleNet1.0.0` | First versioned build. Staged as the rollback for the checkpoint above; a `revert/twinscalenet-1.0.0` branch points at the same commit for convenience. |
 
