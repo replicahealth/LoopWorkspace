@@ -26,12 +26,15 @@ git clone --branch=<branch> --recurse-submodules https://github.com/LoopKit/Loop
 Replace `<branch>` with the initial LoopWorkspace repository branch you wish to checkout.
 
 Two submodules back the Tandem t:slim X2 pump plugin: `TandemKit` (public,
-faBolus-app) and `TandemLoopKit` (private, replicahealth). The `LoopWorkspace`
-scheme builds the plugin alongside every other pump and CGM plugin, so the
-clone needs read access to `replicahealth/TandemLoopKit`; ask for it if the
-recursive clone stops there. Loop itself is unchanged by the plugin: builds
-paired to an Omnipod or any other pump dose exactly as before, and the Tandem
-driver only runs once a t:slim X2 is paired from the pump settings screen.
+faBolus-app) and `TandemLoopKit` (private, replicahealth). They are wired in
+exactly like every other device kit: a submodule entry, a project reference in
+the workspace, and a `LoopWorkspace` scheme entry for the `.loopplugin`. As
+with the private `LibreLoop` submodule, the recursive clone needs read access
+to the private repo; ask for it if the clone stops there. Loop itself is
+unchanged by the plugin and discovers pump drivers from the plugins in the
+bundle at launch, so builds paired to an Omnipod or any other pump dose
+exactly as before, and the Tandem driver only runs once a t:slim X2 is paired
+from the pump settings screen.
 
 ### Open
 

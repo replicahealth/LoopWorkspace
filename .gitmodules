@@ -68,6 +68,8 @@
 [submodule "TandemKit"]
 	path = TandemKit
 	url = https://github.com/faBolus-app/TandemKit.git
+	branch = main
 [submodule "TandemLoopKit"]
 	path = TandemLoopKit
 	url = https://github.com/replicahealth/TandemLoopKit.git
+	branch = main
