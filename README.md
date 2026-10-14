@@ -25,6 +25,17 @@ git clone --branch=<branch> --recurse-submodules https://github.com/LoopKit/Loop
 
 Replace `<branch>` with the initial LoopWorkspace repository branch you wish to checkout.
 
+Two submodules back the Tandem t:slim X2 pump plugin: `TandemKit` (public,
+faBolus-app) and `TandemLoopKit` (private, replicahealth). They are wired in
+exactly like every other device kit: a submodule entry, a project reference in
+the workspace, and a `LoopWorkspace` scheme entry for the `.loopplugin`. As
+with the private `LibreLoop` submodule, the recursive clone needs read access
+to the private repo; ask for it if the clone stops there. Loop itself is
+unchanged by the plugin and discovers pump drivers from the plugins in the
+bundle at launch, so builds paired to an Omnipod or any other pump dose
+exactly as before, and the Tandem driver only runs once a t:slim X2 is paired
+from the pump settings screen.
+
 ### Open
 
 Change to the cloned directory and open the workspace in Xcode:
@@ -112,7 +123,11 @@ git submodule update --init --recursive
 
 | Checkpoint | Installed | Loop commit | Dosing version | Notes |
 |---|---|---|---|---|
-| `twinscalenet-1.0.0-gain-chart` | 2026-09-28 | `e36cca84` | `TwinScaleNet1.0.0` | Current. Adds the gain-history record and the "Gain k" status chart (Loop PR #10). Doses identical to `twinscalenet-1.0.0`. Release configuration, `LoopWorkspace` scheme. |
+| `twinscalenet-1.0.0-tandem-soak-4` | 2026-10-13 | `e36cca84` | `TwinScaleNet1.0.0` | Current. A Loop bolus (phone or watch) now pre-empts a basal micro-bolus in flight instead of being refused as busy; the cut-short micro-bolus is booked at its delivered amount and the rest refunded to the next window. Loop code unchanged; no dosing change. |
+| `twinscalenet-1.0.0-tandem-soak-3` | 2026-10-09 | `e36cca84` | `TwinScaleNet1.0.0` | Adds the native-rate timeline: a window closed after a disconnection is booked at the rates the pump logged. No dosing change. |
+| `twinscalenet-1.0.0-tandem-soak-2` | 2026-10-08 | `e36cca84` | `TwinScaleNet1.0.0` | Same as below plus the Tandem reconnect fix: the driver re-arms Bluetooth reconnection after TandemKit's ladder gives up. No dosing change. |
+| `twinscalenet-1.0.0-tandem-soak` | 2026-10-07 | `e36cca84` | `TwinScaleNet1.0.0` | Same Loop code as the gain-chart checkpoint; adds the TandemLoopKit plugin (t:slim X2, micro-bolus basal) for the saline soak. Doses identical for Omnipod; Tandem doses attributed by `HKDevice.model`. Release configuration, `LoopWorkspace` scheme, iPhone 13 Pro. |
+| `twinscalenet-1.0.0-gain-chart` | 2026-09-28 | `e36cca84` | `TwinScaleNet1.0.0` | Adds the gain-history record and the "Gain k" status chart (Loop PR #10). Doses identical to `twinscalenet-1.0.0`. Release configuration, `LoopWorkspace` scheme. |
 | `twinscalenet-1.0.0` | 2026-09-16 | `b6ed107d` | `TwinScaleNet1.0.0` | First versioned build. Staged as the rollback for the checkpoint above; a `revert/twinscalenet-1.0.0` branch points at the same commit for convenience. |
 
 The tag is the authority, because a branch can move and a tag cannot. A

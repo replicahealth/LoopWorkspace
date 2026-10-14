@@ -196,6 +196,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9734C7D27ADCDBD7F7A0B7B3"
+               BuildableName = "TandemLoopKitPlugin.loopplugin"
+               BlueprintName = "TandemLoopKitPlugin"
+               ReferencedContainer = "container:TandemLoopKit/TandemLoopKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "B40BF25D23ABD47400A43CEE"
                BuildableName = "ShareClientPlugin.loopplugin"
                BlueprintName = "ShareClientPlugin"
