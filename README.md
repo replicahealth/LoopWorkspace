@@ -25,6 +25,17 @@ git clone --branch=<branch> --recurse-submodules https://github.com/LoopKit/Loop
 
 Replace `<branch>` with the initial LoopWorkspace repository branch you wish to checkout.
 
+Two submodules back the Tandem t:slim X2 pump plugin: `TandemKit` (public,
+faBolus-app) and `TandemLoopKit` (private, replicahealth). They are wired in
+exactly like every other device kit: a submodule entry, a project reference in
+the workspace, and a `LoopWorkspace` scheme entry for the `.loopplugin`. As
+with the private `LibreLoop` submodule, the recursive clone needs read access
+to the private repo; ask for it if the clone stops there. Loop itself is
+unchanged by the plugin and discovers pump drivers from the plugins in the
+bundle at launch, so builds paired to an Omnipod or any other pump dose
+exactly as before, and the Tandem driver only runs once a t:slim X2 is paired
+from the pump settings screen.
+
 ### Open
 
 Change to the cloned directory and open the workspace in Xcode:
@@ -63,13 +74,13 @@ The identity is `TwinScaleNet<version>`, defined once in
 `Loop/LoopCore/UnifiedDosingStrategy.swift` (`enum TwinScaleNetVersion`). It
 appears in three places, all from that one definition:
 
-- **Dose attribution / logs** — `TwinScaleNet1.0.0`. This is the
+- **Dose attribution / logs** — `TwinScaleNet2.0.0`. This is the
   `policyIdentifier` stored on every enacted dose and surfaced in the insulin
   delivery history.
-- **The app menu** — `TwinScaleNet1.0.0 (experimental)`, on the Dosing
+- **The app menu** — `TwinScaleNet2.0.0 (experimental)`, on the Dosing
   Strategy settings screen.
-- **Dose metadata** — `model_id` (`TwinScaleNet1.0.0`), `model_version`
-  (`1.0.0`) and `model_base` (the checkpoint), plus the versioned name in the
+- **Dose metadata** — `model_id` (`TwinScaleNet2.0.0`), `model_version`
+  (`2.0.0`) and `model_base` (the checkpoint), plus the versioned name in the
   human-readable rationale string.
 
 `version` covers the trained checkpoint *and* everything downstream that
@@ -90,6 +101,7 @@ a bump stays correctly attributed on both sides of it.
 
 | Version | Base model | Date | Changes |
 |---|---|---|---|
+| `TwinScaleNet2.0.0` | `post_flat_hyb_w1024_s1` | 2026-10-18 | New base checkpoint, from InsulinRL-hybrid's clone-vs-post-training width study (`experiments/aid_meta/lineage_width.py`, write-up `LINEAGE_WIDTH.html`, 2026-10-14/16): the "clone + post-training, 1024" arm, seed 1 of 3, chosen as the seed with the lowest validation Magni (3.88 at step 3,000; seeds 0 and 2 reached 4.03 and 4.00). A 14→1024→1024→1 head built from random weights by behaviour cloning (30k steps), consolidation (12k, anchor 0.5) and the twin recipe, on the `pubtrain+privext` corpus. Architecturally new for the app: besides the same 14 features the head now reads the raw 3×48 lag window (CGM, insulin, carbs, newest first, normalised as the features are; a missing CGM lag reads as the current glucose), so a dose depends on the shape of the last 4 h rather than only its summary statistics. Simulator (30 subjects × 3 sim seeds × 10 days, the three model seeds pooled, each arm at its own ×1.0 dose): TIR 82.17 %, TBR 0.487 %, Magni 3.891, against the step-0 trunk's 72.27 / 0.395 / 5.518; at matched TIR 76.36 % the TBR is 0.053 against the trunk's 1.183. Not the locked test. Everything downstream of the head — TDD anchor, GAIN_FAST bounds and rate, shield, IOB headroom, hard suspend, rounding — is unchanged from 1.0.0. Like `trainsplit_s2`, this checkpoint was trained against a per-patient global TDD (the corpus fits' `global_tdd`, both in cloning and in the twin rollouts), not the `w7` window the app anchors on; the 1.0.0 decision to keep the windowed anchor as the better estimate of that long-run mean stands. Unknown insulin history is still read as on-schedule delivery in both the features and the window, where the Python's trace-start pad is zero insulin. CoreML export is FP32 via `InsulinRL/export_twinscalenet_flat.py` (parity with the PyTorch checkpoint to 3e-8 on the probe inputs). Loop PR [#11](https://github.com/replicahealth/LoopReplicaIntegration/pull/11) (`c9ae8e8d`). |
 | `TwinScaleNet1.0.0` | `trainsplit_s2` | 2026-08-31 | First versioned build. Adopts the `trainsplit_s2_best` trunk checkpoint (gate PASS 2026-08-13), replacing stage08d `sh_s0h10`. TDD anchor rewritten to the training-time `w7` rule — 7-day trailing shrinkage toward the schedule prior, replacing `max(rolling-24h, basalTotal/0.55)`. Gain range widened to 0.50–2.00 for both the slider and the GAIN_FAST integrator. On the excursion this allows: a step moves `k` by at most +0.0060 (the +1.5 error cap binds at BG 275), so an unbroken run of maximal highs needs ~92 steps — about 7.6 h at the 5-minute cadence — to travel 1.45 → 2.00. The 3× hypoglycemia weight is a slope, not a per-step ceiling: its own cap would need BG ≤ −55 and never binds, giving −0.0030 at BG 70 and −0.0066 at BG 40. The reachable extremes are therefore close to symmetric (−0.0066 against +0.0060), not 3× apart. Gain slider gains a recommendation track and marker; the Adaptive Scaling Factor toggle now gates automatic updating only, and no longer forces the enacted gain to 1. |
 
 ### Pre-versioning history
@@ -112,7 +124,13 @@ git submodule update --init --recursive
 
 | Checkpoint | Installed | Loop commit | Dosing version | Notes |
 |---|---|---|---|---|
-| `twinscalenet-1.0.0-gain-chart` | 2026-09-28 | `e36cca84` | `TwinScaleNet1.0.0` | Current. Adds the gain-history record and the "Gain k" status chart (Loop PR #10). Doses identical to `twinscalenet-1.0.0`. Release configuration, `LoopWorkspace` scheme. |
+| `twinscalenet-2.0.0-tandem-minbolus` | 2026-10-20 | `c9ae8e8d` | `TwinScaleNet2.0.0` | Current. Same Loop code as `twinscalenet-2.0.0`; TandemLoopKit `f9bc14b` carries basal debt and pays it as one bolus once it reaches a minimum micro-bolus (settings screen, default 0.3 U), because the worn X2 raised no-delivery alarms about daily under 0.05–0.15 U micro-boluses. Deferred windows are booked at the floor, so IOB is unchanged in total; delivery lags Loop's rate by up to 0.3 U ÷ the gap over the floor. Threshold recorded in `HKDevice.model`. Loop dosing recommendations unchanged. Release configuration, `LoopWorkspace` scheme, iPhone 13 Pro. |
+| `twinscalenet-2.0.0` | 2026-10-19 | `c9ae8e8d` | `TwinScaleNet2.0.0` | First install of the 2.0.0 head (clone + post-training w1024 flat-hybrid, raw 3×48 window input; Loop PR #11). Workspace tree otherwise identical to `tandem-soak-4`: TandemLoopKit plugin, Release configuration, `LoopWorkspace` scheme, iPhone 13 Pro. 15 plugins in the bundle; CGM (`LibreLoopCGMManager`) and pump (`Tandem`) state verified intact after the install. |
+| `twinscalenet-1.0.0-tandem-soak-4` | 2026-10-13 | `e36cca84` | `TwinScaleNet1.0.0` | A Loop bolus (phone or watch) now pre-empts a basal micro-bolus in flight instead of being refused as busy; the cut-short micro-bolus is booked at its delivered amount and the rest refunded to the next window. Loop code unchanged; no dosing change. |
+| `twinscalenet-1.0.0-tandem-soak-3` | 2026-10-09 | `e36cca84` | `TwinScaleNet1.0.0` | Adds the native-rate timeline: a window closed after a disconnection is booked at the rates the pump logged. No dosing change. |
+| `twinscalenet-1.0.0-tandem-soak-2` | 2026-10-08 | `e36cca84` | `TwinScaleNet1.0.0` | Same as below plus the Tandem reconnect fix: the driver re-arms Bluetooth reconnection after TandemKit's ladder gives up. No dosing change. |
+| `twinscalenet-1.0.0-tandem-soak` | 2026-10-07 | `e36cca84` | `TwinScaleNet1.0.0` | Same Loop code as the gain-chart checkpoint; adds the TandemLoopKit plugin (t:slim X2, micro-bolus basal) for the saline soak. Doses identical for Omnipod; Tandem doses attributed by `HKDevice.model`. Release configuration, `LoopWorkspace` scheme, iPhone 13 Pro. |
+| `twinscalenet-1.0.0-gain-chart` | 2026-09-28 | `e36cca84` | `TwinScaleNet1.0.0` | Adds the gain-history record and the "Gain k" status chart (Loop PR #10). Doses identical to `twinscalenet-1.0.0`. Release configuration, `LoopWorkspace` scheme. |
 | `twinscalenet-1.0.0` | 2026-09-16 | `b6ed107d` | `TwinScaleNet1.0.0` | First versioned build. Staged as the rollback for the checkpoint above; a `revert/twinscalenet-1.0.0` branch points at the same commit for convenience. |
 
 The tag is the authority, because a branch can move and a tag cannot. A
