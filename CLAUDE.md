@@ -76,3 +76,8 @@ PR in the README row so they can be lined up.
 - The `LoopWorkspace` scheme must build every `.loopplugin` target. An install
   whose plugin set does not cover the paired devices drops those pairings on
   launch — on the pump side, a wasted pod.
+- Phone installs are always built with `-scheme LoopWorkspace
+  -configuration Release`. The scheme's Run action is Debug, so an Xcode Run
+  or a bare `xcodebuild` produces a Debug install by default; the Release
+  flag must be passed explicitly. Release is what the Fastfile ships and what
+  a deployment checkpoint tag is meant to reproduce.
