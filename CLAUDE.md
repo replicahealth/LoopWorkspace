@@ -51,11 +51,23 @@ under one identifier and makes the affected doses unattributable.
 
 Which component to bump:
 
-- **major** (`2.0.0`) — a new base checkpoint. Also update `baseModel`.
-- **minor** (`1.1.0`) — a change in dosing logic on the same checkpoint: the
-  TDD anchor, the gain wrapper, the feature builder, a safety backstop.
-- **patch** (`1.0.1`) — a constant or tuning change that shifts doses without
+- **major** (`2.0.0`) — a new architecture: a change to what the head reads
+  (the feature set, the raw window, their layout or normalisation) or to the
+  network's shape, so the CoreML program itself is different. Also update
+  `baseModel`.
+- **minor** (`2.1.0`) — a new checkpoint on the same architecture (a
+  different training recipe, lineage or corpus; update `baseModel`), or a
+  change in dosing logic on the same checkpoint: the TDD anchor, the gain
+  wrapper, a safety backstop.
+- **patch** (`2.0.1`) — a seed swap within the same recipe (update
+  `baseModel`), or a constant or tuning change that shifts doses without
   changing the structure of the logic.
+
+The checkpoint sits on the minor axis because the architecture, not the
+weights, is what the app code has to change for; a weight swap of any size
+is a row in the table and a new identifier, not a new port. Before
+2026-10-25 a new checkpoint was a major bump (that is why 2.0.0 is major: it
+also added the raw-window input).
 
 ### Every bump needs a README row
 
